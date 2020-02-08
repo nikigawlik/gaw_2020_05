@@ -1,6 +1,5 @@
 import { renderBackground } from "./background.mjs";
-import { initPlayer } from "./player.mjs";
-import { playerJump } from "./player.mjs";
+import { initPlayer, playerJump } from "./player.mjs";
 import { init as svgInit } from "./svg.mjs";
 import { KEY_CODES } from "./utils.mjs";
 

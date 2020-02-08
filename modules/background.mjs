@@ -1,9 +1,5 @@
-import { createElmt } from "./svg.mjs";
-import { setMultipleAttr } from "./svg.mjs";
-import { viewWidth } from "./svg.mjs";
-import { viewHeight } from "./svg.mjs";
 import { COLORS } from "./settings.mjs";
-import { animateAttr } from "./svg.mjs";
+import { animateAttr, createElmt, setMultipleAttr, viewHeight, viewWidth } from "./svg.mjs";
 
 let circle;
 let rect;

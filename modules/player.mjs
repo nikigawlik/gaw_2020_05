@@ -1,9 +1,7 @@
-import { createDots } from "./generator.mjs";
-import { dot, normalize, perp, scale, subtract, x, y } from "./geometry.mjs";
-import { clearAnimateAttr, createElmt, setAttr, setMultipleAttr, viewHeight, viewWidth } from "./svg.mjs";
-import { generate } from "./generator.mjs";
-import { Dot } from "./gamelogic.mjs";
-import { Game } from "./gamelogic.mjs";
+import { Dot, Game } from "./gamelogic.mjs";
+import { assignPoints, createDots } from "./generator.mjs";
+import { subtract, x, y } from "./geometry.mjs";
+import { clearAnimateAttr, createElmt, setMultipleAttr, viewHeight, viewWidth } from "./svg.mjs";
 
 
 export class DotVis extends Dot{
@@ -22,9 +20,9 @@ export class DotVis extends Dot{
             "stroke-width": 7,
         });
         setMultipleAttr(this.svgElmt, this.game.dot1 == this? {
-            fill: "#aaa",
-            stroke: "#a22",
-            r: 15,
+            fill: "#a22",
+            stroke: "#111",
+            r: 8,
         } : {
             fill: "#aaa",
             stroke: "#111",
@@ -52,7 +50,7 @@ export class DotVis extends Dot{
     }
 }
 
-let gameState;
+let game;
 let playerSvg = null;
 
 export async function initPlayer() {
@@ -63,20 +61,22 @@ export async function initPlayer() {
     // } while(dot1 === dot2)
 
     // playerLineAngle = calcPlayerLineAngle();
-    gameState = new Game();
-    createDots(gameState, DotVis);
+    game = new Game();
+    createDots(game, DotVis);
 
-    for(let d of gameState.dots) {
+    for(let d of game.dots) {
         d.render();
     }
     renderPlayer();
+
+    assignPoints(game);
 }
 
 let playerLineAngle = NaN;
 let playerMoveDir = 1;
 
 function renderPlayer() {
-    console.log("RENDER PLAYER");
+    // console.log("RENDER PLAYER");
     playerSvg = playerSvg || (() => {
         let g = createElmt("g");
         const l = Math.max(viewWidth, viewHeight)*4;
@@ -92,7 +92,7 @@ function renderPlayer() {
         g.append(rect);
         return g;
     })();
-    let centerPos = gameState.dot1.pos;
+    let centerPos = game.dot1.pos;
     let angle = calcPlayerLineAngle();
     setMultipleAttr(playerSvg, {
         transform: `translate(${x(centerPos)}, ${y(centerPos)})`,
@@ -107,7 +107,7 @@ function playerRenderAnimation(prevAngle, prevDot, angle, dot) {
     
     let rectElmt = playerSvg.querySelector("rect");
     if(!isNaN(prevAngle) && prevAngle != angle){
-        console.log(`${prevAngle} -> ${angle}`);
+        // console.log(`${prevAngle} -> ${angle}`);
         let deltaAngle = angle - prevAngle;
         deltaAngle = ((deltaAngle%180)+180)%180;
         deltaAngle = playerMoveDir < 0? deltaAngle : -180 + deltaAngle;
@@ -138,7 +138,10 @@ function playerRenderAnimation(prevAngle, prevDot, angle, dot) {
         setMultipleAttr(rectElmt, {
             transform: `rotate(${angle} 0 0)`,
         });
-        setTimeout(renderPlayer, duration * 1000 + 10);
+        setTimeout(() => {
+            renderPlayer(); 
+            renderDots();
+        }, duration * 1000 + 10);
     } else {
         renderPlayer();
     }
@@ -147,29 +150,28 @@ function playerRenderAnimation(prevAngle, prevDot, angle, dot) {
 
 
 function renderDots() {
-    for(let d of gameState.dots) {
+    for(let d of game.dots) {
         d.render();
     }
 }
 
 export function playerJump(clockwise) {
     let prevAngle = calcPlayerLineAngle();
-    let prevDot = gameState.dot1;
+    let prevDot = game.dot1;
 
-    gameState.playerMove(clockwise);
+    game.playerMove(clockwise);
 
     let angle = calcPlayerLineAngle();
-    let dot = gameState.dot1;
+    let dot = game.dot1;
 
     playerMoveDir = clockwise? -1 : 1;
     
     playerRenderAnimation(prevAngle, prevDot, angle, dot);
     // setTimeout(renderPlayer, 1);
-    renderDots();
 }
 
 function calcPlayerLineAngle() {
-    let delta = subtract(gameState.dot2.pos, gameState.dot1.pos);
+    let delta = subtract(game.dot2.pos, game.dot1.pos);
     let angle = Math.atan2(y(delta), x(delta));
     return  angle / Math.PI * 180;
 }

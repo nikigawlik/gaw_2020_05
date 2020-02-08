@@ -1,46 +1,18 @@
-import { magnitude, subtract, vec2 } from "./geometry.mjs";
 import { Dot } from "./gamelogic.mjs";
+import { magnitude, subtract, vec2 } from "./geometry.mjs";
 import { viewHeight, viewWidth } from "./svg.mjs";
 
 
-export async function generate(numberOfPoints) {
-    let gameState = {  // TODO  yeah this is not clean at all
-        dot1: null,
-        dot2: null,
-        dots: createDots(),
-        playerMoveDir: 0,
-    };
-
-    gameState.dot1 = gameState.dots[Math.floor(Math.random() * gameState.dots.length)];
-    do {
-        gameState.dot2 = gameState.dots[Math.floor(Math.random() * gameState.dots.length)];
-    } while(gameState.dot1 === gameState.dot2)
-    
-    // let gameState = {  // TODO  yeah this is not clean at all
-    //     dot1: dot1,
-    //     dot2: dot2,
-    //     dots: dots,
-    //     playerMoveDir: playerMoveDir,
-    // };
-
-    let moves = [];
-
+export async function assignPoints(referenceGame) {
+    // play a test game
+    let history = [];
+    let game = referenceGame.clone();
     for(let i = 0; i < 10; i++) {
-        await new Promise((resolve, reject) => {
-            let listener = ev => {
-                resolve();
-                window.removeEventListener("keydown", listener);
-            };
-            window.addEventListener("keydown", listener);
-        });
-        let clockwise = Math.random() > 0.5;
-        moves.push(clockwise);
-        simulatePlayerJump(clockwise, gameState);
+        let cw = Math.random() < 0.5;
+        history.push(cw);
+        game.playerMove(cw);
     }
-
-    console.log(moves.map(cw => cw? "clockwise" : "anticlockw").join(" "));
-
-    let dot = gameState.dots[Math.round(Math.random() * gameState.dots.length)];
+    console.log(history);
 }
 
 export function createDots(game, dotClass = Dot) {
@@ -54,7 +26,7 @@ export function createDots(game, dotClass = Dot) {
         let dot = new dotClass(vec2(
             viewWidth/2 + Math.cos(angle) * d, 
             viewHeight/2 + Math.sin(angle) * d
-        ), 1, game); // (i > 4? Dot : Dot)
+        ), Math.floor(Math.random() * 4) + 1, game); // (i > 4? Dot : Dot)
         
         // check distance
         let removeMe = false;

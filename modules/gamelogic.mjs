@@ -1,6 +1,4 @@
 import { dot, normalize, perp, scale, subtract } from "./geometry.mjs";
-import { y } from "./geometry.mjs";
-import { x } from "./geometry.mjs";
 
 export class Dot {
     constructor(pos, hits, game) {
@@ -32,6 +30,10 @@ export class Dot {
         }
 
         if(this.onremove) this.onremove;
+    }
+
+    clone() {
+        return new Dot(this.pos, this.hits, this.game);
     }
 }
 
@@ -70,5 +72,19 @@ export class Game {
         this.dot2 = this.dot1;
         this.dot1 = buf;
         this.dot1.takeHit();
+    }
+
+    clone() {
+        let newGame = new Game();
+        let newDots = this.dots.map(dot => {
+            let newDot = dot.clone();
+            if(dot == this.dot1) newGame.dot1 = dot;
+            if(dot == this.dot2) newGame.dot2 = dot;
+            newDot.game = newGame;
+            return newDot;
+        });
+
+        newGame.dots = newDots;
+        return newGame;
     }
 }
