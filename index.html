@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <script type="module" src="modules/main.mjs"></script>
+</head>
+<body>
+    <main>
+        <svg xmlns="http://www.w3.org/2000/svg" >
+            <pattern id="stripePattern" x="0" y="0" width="32" height="32" patternUnits="userSpaceOnUse" viewBox="0 0 100 100"  stroke-width=0>
+                <rect x="0" y="-50" width="25" height="100" fill="#222" stroke-width="0" transform="rotate(45 0 0) scale(1.4142)"></rect>
+                <rect x="50" y="-50" width="25" height="100" fill="#222" stroke-width="0" transform="rotate(45 0 0) scale(1.4142)"></rect>
+                <!-- <rect x="0" y="0" width="50" height="100" fill="#111"/> -->
+            </pattern>
+            <style>
+                .dotTextBG { font: bold 16px sans-serif; stroke: #111; stroke-width: 8;}
+                .dotText { font: bold 16px sans-serif; fill: #aaa; stroke-width: 0;}
+                .small { font: italic 13px sans-serif; }
+            </style>
+        </svg>
+    </main>
+</body>

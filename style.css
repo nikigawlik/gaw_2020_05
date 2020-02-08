@@ -1,0 +1,14 @@
+* {
+    font-family: monospace;
+}
+
+/* game */
+body {
+    margin: 0;
+    background-color: #eee;
+}
+
+main {
+    width: 100%;
+    position: relative;
+}
