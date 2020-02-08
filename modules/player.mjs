@@ -60,13 +60,14 @@ export class DotVis extends Dot{
     }
 }
 
+let gameEnded = false;
 function endGame() {
-    
     // let pointsDot = new DotVis(vec2(28, 28), -1, game);
     // pointsDot.type = "whatwhatwhatitypedoesntmatter";
     // pointsDot.render();
-    // let gameEndText = createElmt("text", { class: "bigText", x: 46, y: 34});
-    // scoreText.innerHTML = "5 points";
+    let gameEndText = createElmt("text", { class: "bigText", x: viewWidth/2, y: viewHeight/2, "text-anchor": "middle"});
+    gameEndText.innerHTML = `Round complete.\nFinal score:\n${scoreText.innerHTML}`;
+    gameEnded = true;
 }
 
 let game;
@@ -182,6 +183,8 @@ function renderDots() {
 }
 
 export function playerJump(clockwise) {
+    if(gameEnded) return;
+
     let prevAngle = calcPlayerLineAngle();
     let prevDot = game.dot1;
 
