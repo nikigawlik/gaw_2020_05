@@ -7,23 +7,33 @@ window.onload = () => {
     svgInit();
     renderWorld();
     init();
-}
 
-window.addEventListener("resize", () => {
-    renderWorld();
-});
-
-window.addEventListener("keydown", ev => {
-    if(ev.keyCode == KEY_CODES.LEFT || ev.key == "a") {
-        playerJump(false);
-    }
-    if(ev.keyCode == KEY_CODES.RIGHT || ev.key == "d") {
+    window.addEventListener("resize", () => {
+        renderWorld();
+    });
+    
+    window.addEventListener("keydown", ev => {
+        if(ev.keyCode == KEY_CODES.LEFT || ev.key == "a") {
+            playerJump(false);
+        }
+        if(ev.keyCode == KEY_CODES.RIGHT || ev.key == "d") {
+            playerJump(true);
+        }
+        // if(ev.keyCode == KEY_CODES.UP || ev.keyCode == KEY_CODES.SPACE || ev.key == "w") {
+        //     playerFlip();
+        // }
+    });
+    
+    document.querySelector(".arrow.clockwise").addEventListener("click", ev => {
+        console.log("asdfasdf");
         playerJump(true);
-    }
-    // if(ev.keyCode == KEY_CODES.UP || ev.keyCode == KEY_CODES.SPACE || ev.key == "w") {
-    //     playerFlip();
-    // }
-});
+    })
+    document.querySelector(".arrow.counterclk").addEventListener("click", ev => {
+        playerJump(false);
+        console.log("asdfasdf");
+    
+    })
+}
 
 function renderWorld() {
     // background

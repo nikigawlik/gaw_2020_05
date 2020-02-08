@@ -8,6 +8,9 @@ export class Dot {
 
         this.onhit = null;
         this.onremove = null;
+
+        this.id = null;
+        this.original = null;
     }
 
     takeHit() {
@@ -33,7 +36,9 @@ export class Dot {
     }
 
     clone() {
-        return new Dot(this.pos, this.hits, this.game);
+        let dupl = new Dot(this.pos, this.hits, this.game);
+        dupl.original = this;
+        return dupl;
     }
 }
 

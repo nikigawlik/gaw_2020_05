@@ -1,8 +1,7 @@
 import { Dot, Game } from "./gamelogic.mjs";
 import { assignPoints, createDots } from "./generator.mjs";
-import { subtract, x, y } from "./geometry.mjs";
+import { subtract, x, y, vec2 } from "./geometry.mjs";
 import { clearAnimateAttr, createElmt, setMultipleAttr, viewHeight, viewWidth } from "./svg.mjs";
-
 
 export class DotVis extends Dot{
     constructor(pos, hits, game) {
@@ -21,25 +20,27 @@ export class DotVis extends Dot{
         });
         setMultipleAttr(this.svgElmt, this.game.dot1 == this? {
             fill: "#a22",
-            stroke: "#111",
+            stroke: this.type? "#11a" : "#111",
             r: 8,
         } : {
             fill: "#aaa",
-            stroke: "#111",
+            stroke: this.type? "#11a" : "#111",
             r: 10,
         });
-        this.textElmtBG = this.textElmtBG || createElmt("text", { class: "dotTextBG" });
-        this.textElmt = this.textElmt || createElmt("text", { class: "dotText" });
-        setMultipleAttr(this.textElmt, {
-            x: x(this.pos) + 4,
-            y: y(this.pos) + 18,
-        });
-        setMultipleAttr(this.textElmtBG, {
-            x: x(this.pos) + 4,
-            y: y(this.pos) + 18,
-        });
-        this.textElmt.innerHTML = `${this.hits}`;
-        this.textElmtBG.innerHTML = `${this.hits}`;
+        if(this.hits >= 0) {
+            this.textElmtBG = this.textElmtBG || createElmt("text", { class: "dotTextBG" });
+            this.textElmt = this.textElmt || createElmt("text", { class: "dotText" });
+            setMultipleAttr(this.textElmt, {
+                x: x(this.pos) + 4,
+                y: y(this.pos) + 18,
+            });
+            setMultipleAttr(this.textElmtBG, {
+                x: x(this.pos) + 4,
+                y: y(this.pos) + 18,
+            });
+            this.textElmt.innerHTML = `${this.hits}`;
+            this.textElmtBG.innerHTML = `${this.hits}`;
+        }
     }
 
     remove() {
@@ -47,20 +48,32 @@ export class DotVis extends Dot{
         this.svgElmt.remove();
         if(this.textElmt) this.textElmt.remove();
         if(this.textElmtBG) this.textElmtBG.remove();
+        if(scoreText) {
+            let score = this.game.dots.filter(d => !!d.type).length;
+            scoreText.innerHTML = `${score} points`;
+            
+            let dotsLeft = this.game.dots.filter(d => !d.type).length;
+            if(dotsLeft == 0) {
+                endGame();
+            }
+        }
     }
+}
+
+function endGame() {
+    
+    // let pointsDot = new DotVis(vec2(28, 28), -1, game);
+    // pointsDot.type = "whatwhatwhatitypedoesntmatter";
+    // pointsDot.render();
+    // let gameEndText = createElmt("text", { class: "bigText", x: 46, y: 34});
+    // scoreText.innerHTML = "5 points";
 }
 
 let game;
 let playerSvg = null;
+let scoreText = null;
 
 export async function initPlayer() {
-    // dots = createDots();
-    // dot1 = dots[Math.floor(Math.random() * dots.length)];
-    // do {
-    //     dot2 = dots[Math.floor(Math.random() * dots.length)];
-    // } while(dot1 === dot2)
-
-    // playerLineAngle = calcPlayerLineAngle();
     game = new Game();
     createDots(game, DotVis);
 
@@ -70,6 +83,19 @@ export async function initPlayer() {
     renderPlayer();
 
     assignPoints(game);
+    renderDots();
+
+    let pointsDot = new DotVis(vec2(28, 28), -1, game);
+    pointsDot.type = "whatwhatwhatitypedoesntmatter";
+    pointsDot.render();
+    scoreText = createElmt("text", { class: "dotText", x: 46, y: 34});
+    scoreText.innerHTML = "5 points";
+
+    let fakeDot2 = new DotVis(vec2(28, 28 + 35), -1, game);
+    // fakeDot.type = "whatwhatwhatitypedoesntmatter";
+    pointsDot.render();
+    let scoreText2 = createElmt("text", { class: "dotText", x: 46, y: 34 + 35});
+    scoreText2.innerHTML = "destroy these";
 }
 
 let playerLineAngle = NaN;

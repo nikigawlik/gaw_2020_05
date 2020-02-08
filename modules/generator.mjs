@@ -7,12 +7,16 @@ export async function assignPoints(referenceGame) {
     // play a test game
     let history = [];
     let game = referenceGame.clone();
-    for(let i = 0; i < 10; i++) {
+    while(game.dots.length > 5) {
         let cw = Math.random() < 0.5;
         history.push(cw);
         game.playerMove(cw);
     }
-    console.log(history);
+    console.log(`before: ${referenceGame.dots.length} after: ${game.dots.length}`);
+    console.log(history.map(a => a? "clockwise" : "counterclk"));
+    for(let dot of game.dots) {
+        dot.original.type = "dontDestroy";
+    }
 }
 
 export function createDots(game, dotClass = Dot) {

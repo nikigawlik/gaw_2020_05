@@ -12,3 +12,16 @@ main {
     width: 100%;
     position: relative;
 }
+
+.arrow {
+    position: absolute;
+    bottom: 0;
+    display: block;
+}
+.arrow:hover {
+    bottom: 10px;
+}
+
+.arrow.clockwise {
+    right: 0;
+}
