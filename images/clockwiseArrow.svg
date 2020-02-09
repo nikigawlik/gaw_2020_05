@@ -70,5 +70,21 @@
        d="M 103.82617 29.103516 L 95.285156 39.435547 C 86.716776 32.517949 75.659458 29.420343 64.841797 30.794922 C 60.184894 31.386665 55.57451 32.806839 51.230469 35.097656 C 33.854286 44.260936 25.614269 64.8397 31.859375 83.464844 C 38.104472 102.08998 57.088762 113.53494 76.476562 110.37109 C 95.864375 107.20724 110.21876 90.316142 110.21875 70.671875 L 90.214844 70.671875 C 90.214848 80.652634 83.100462 89.025342 73.25 90.632812 C 63.399546 92.240287 53.997193 86.564524 50.824219 77.101562 C 47.651237 67.638595 51.732145 57.440788 60.560547 52.785156 C 67.841243 48.945704 76.406384 49.909434 82.5625 54.828125 L 75.214844 63.71875 L 109.76953 63.726562 L 103.82617 29.103516 z "
        transform="matrix(0.26458334,0,0,0.26458334,0,-10.583333)"
        id="path815" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:8.92582417px;line-height:1.25;font-family:monospace;-inkscape-font-specification:'monospace Bold';opacity:0.98999999;fill:#888888;fill-opacity:1;stroke:#aaaaaa;stroke-width:0;stroke-linecap:butt;stroke-linejoin:round;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1"
+       x="16.058157"
+       y="11.190981"
+       id="text6106"><tspan
+         sodipodi:role="line"
+         id="tspan6104"
+         x="16.058157"
+         y="11.190981"
+         style="stroke-width:0">D</tspan><tspan
+         sodipodi:role="line"
+         x="16.058157"
+         y="22.348261"
+         style="stroke-width:0"
+         id="tspan6126" /></text>
   </g>
 </svg>

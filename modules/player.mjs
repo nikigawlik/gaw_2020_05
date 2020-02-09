@@ -4,6 +4,7 @@ import { assignPoints, createDots, init as generatorInit } from "./generator.mjs
 import { subtract, vec2, x, y } from "./geometry.mjs";
 import { getPreset } from "./levelSelect.mjs";
 import { clearAnimateAttr, createElmt, setMultipleAttr, viewHeight, viewWidth } from "./svg.mjs";
+import { pushElementToFront } from "./svg.mjs";
 
 export class DotVis extends Dot{
     constructor(pos, hits, game) {
@@ -97,16 +98,16 @@ export async function initPlayer() {
     for(let d of game.dots) {
         d.render();
     }
-    renderPlayer();
-
+    
     assignPoints(game, gamePreset.maxPoints, gamePreset.normalizeHits);
     renderDots();
+    renderPlayer();
 
     pointsDot = pointsDot || new DotVis(vec2(28, 28), -1, game);
     pointsDot.type = "whatwhatwhatitypedoesntmatter";
     pointsDot.render();
     scoreText = scoreText || createElmt("text", { class: "dotText", x: 46, y: 34});
-    scoreText.innerHTML = "5 points";
+    scoreText.innerHTML = "keep these";
 
     fakeDot2 = fakeDot2 || new DotVis(vec2(28, 28 + 35), -1, game);
     fakeDot2.render();
@@ -141,6 +142,7 @@ function renderPlayer() {
         g.append(rect);
         return g;
     })();
+    pushElementToFront(playerSvg);
     let centerPos = game.dot1.pos;
     let angle = calcPlayerLineAngle();
     setMultipleAttr(playerSvg, {
@@ -188,8 +190,8 @@ function playerRenderAnimation(prevAngle, prevDot, angle, dot) {
             transform: `rotate(${angle} 0 0)`,
         });
         setTimeout(() => {
-            renderPlayer(); 
             renderDots();
+            renderPlayer(); 
         }, duration * 1000 + 10);
         setTimeout(() => {
             playClack();

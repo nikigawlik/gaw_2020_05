@@ -6,7 +6,7 @@
 body {
     margin: 0;
     background-color: #111;
-    color: #eee;
+    color: #aaa;
 }
 
 main {
@@ -20,7 +20,7 @@ main {
     display: block;
 }
 .arrow:hover {
-    bottom: 10px;
+    /* fill: #eee; */
 }
 
 .arrow.clockwise {
@@ -30,15 +30,15 @@ main {
 .fullscreen {
     position: absolute;
     right: 0;
-    color: #eee;
+    color: #aaa;
     font-size: 20px;
 }
 
 button {
     background: none;
-    border: 1px solid #eee;
+    border: 1px solid #aaa;
     background-color: #111;
-    color: #eee;
+    color: #aaa;
 }
 
 .botmid {

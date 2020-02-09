@@ -86,3 +86,7 @@ export function clearAnimateAttr(element) {
         element.remove();
     }
 }
+
+export function pushElementToFront(element) {
+    element.parentElement.append(element);
+}
