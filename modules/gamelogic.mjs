@@ -9,7 +9,7 @@ export class Dot {
         this.onhit = null;
         this.onremove = null;
 
-        this.id = null;
+        this.type = 0;
         this.original = null;
     }
 
@@ -47,6 +47,12 @@ export class Game {
         this.dots = [];
         this.dot1 = null;
         this.dot2 = null;
+
+        this.score = 0;
+        this.dotsLeft = 0;
+        this.gameEnded = false;
+        this.maxScore = 0;
+        this.hasMoved = false;
     }
 
     addDot(dot) {
@@ -58,7 +64,13 @@ export class Game {
         this.dot2 = dot2;
     }
 
-    playerMove(clockwise) {
+    playerMove(clockwise, ignoreGameEnd=false) {
+        if(this.gameEnded && !ignoreGameEnd) return;
+        if(!this.hasMoved) {
+            this.hasMoved = true;
+            this.maxScore = this.dots.filter(d => !!d.type).length;
+        }
+
         // --- player rotation --- //
         const sign = clockwise? -1 : 1;
         const dir = normalize(subtract(this.dot2.pos, this.dot1.pos));
@@ -77,6 +89,13 @@ export class Game {
         this.dot2 = this.dot1;
         this.dot1 = buf;
         this.dot1.takeHit();
+
+        // --- check win --- 
+        this.score = this.dots.filter(d => !!d.type).length;
+        this.dotsLeft = this.dots.filter(d => !d.type).length;
+        if(this.dotsLeft == 0) {
+            this.gameEnded = true;
+        }
     }
 
     clone() {

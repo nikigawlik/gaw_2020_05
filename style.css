@@ -5,7 +5,8 @@
 /* game */
 body {
     margin: 0;
-    background-color: #eee;
+    background-color: #111;
+    color: #eee;
 }
 
 main {
@@ -24,4 +25,31 @@ main {
 
 .arrow.clockwise {
     right: 0;
+}
+
+.fullscreen {
+    position: absolute;
+    right: 0;
+    color: #eee;
+    font-size: 20px;
+}
+
+button {
+    background: none;
+    border: 1px solid #eee;
+    background-color: #111;
+    color: #eee;
+}
+
+.botmid {
+    position: absolute;
+    left: 50%;
+    top: 5px;
+}
+.botmid>div {
+    position: relative;
+    left: -50%;
+}
+.curlevel {
+    text-align:center;
 }

@@ -1,6 +1,8 @@
+import { playClack } from "./audio.mjs";
 import { Dot, Game } from "./gamelogic.mjs";
-import { assignPoints, createDots } from "./generator.mjs";
-import { subtract, x, y, vec2 } from "./geometry.mjs";
+import { assignPoints, createDots, init as generatorInit } from "./generator.mjs";
+import { subtract, vec2, x, y } from "./geometry.mjs";
+import { getPreset } from "./levelSelect.mjs";
 import { clearAnimateAttr, createElmt, setMultipleAttr, viewHeight, viewWidth } from "./svg.mjs";
 
 export class DotVis extends Dot{
@@ -43,61 +45,81 @@ export class DotVis extends Dot{
         }
     }
 
-    remove() {
-        super.remove();
+    remove(doSuper=true) {
+        if(doSuper) super.remove();
         this.svgElmt.remove();
         if(this.textElmt) this.textElmt.remove();
         if(this.textElmtBG) this.textElmtBG.remove();
-        if(scoreText) {
-            let score = this.game.dots.filter(d => !!d.type).length;
-            scoreText.innerHTML = `${score} points`;
-            
-            let dotsLeft = this.game.dots.filter(d => !d.type).length;
-            if(dotsLeft == 0) {
-                endGame();
-            }
-        }
     }
 }
 
 let gameEnded = false;
-function endGame() {
+let gameEndText = null;
+function endGame(win) {
     // let pointsDot = new DotVis(vec2(28, 28), -1, game);
     // pointsDot.type = "whatwhatwhatitypedoesntmatter";
     // pointsDot.render();
-    let gameEndText = createElmt("text", { class: "bigText", x: viewWidth/2, y: viewHeight/2, "text-anchor": "middle"});
-    gameEndText.innerHTML = `Round complete.\nFinal score:\n${scoreText.innerHTML}`;
+    gameEndText = createElmt("text", { class: "bigText", x: viewWidth/2, y: viewHeight/2, "text-anchor": "middle"});
+    gameEndText.innerHTML = win? 
+        `You did it, congratulations!`
+        :
+        `You failed. Do not let the counter of blue dots reach zero`
+    ;
     gameEnded = true;
 }
 
 let game;
 let playerSvg = null;
+
+let pointsDot = null;
 let scoreText = null;
+let fakeDot2 = null;
+let scoreText2 = null;
+
 
 export async function initPlayer() {
+    if(game) {
+        // clean up
+        for(let d of game.dots) {
+            d.remove(false);
+        }
+
+        if(gameEnded) {
+            gameEnded = false;
+            if(gameEndText) gameEndText.remove();
+        }
+    }
     game = new Game();
-    createDots(game, DotVis);
+    let gamePreset = getPreset();
+    generatorInit(`applesauce+${gamePreset.numberOfDots}+${gamePreset.maxPoints}+${gamePreset.normalizeHits}`);
+    createDots(game, gamePreset.numberOfDots, DotVis);
 
     for(let d of game.dots) {
         d.render();
     }
     renderPlayer();
 
-    assignPoints(game);
+    assignPoints(game, gamePreset.maxPoints, gamePreset.normalizeHits);
     renderDots();
 
-    let pointsDot = new DotVis(vec2(28, 28), -1, game);
+    pointsDot = pointsDot || new DotVis(vec2(28, 28), -1, game);
     pointsDot.type = "whatwhatwhatitypedoesntmatter";
     pointsDot.render();
-    scoreText = createElmt("text", { class: "dotText", x: 46, y: 34});
+    scoreText = scoreText || createElmt("text", { class: "dotText", x: 46, y: 34});
     scoreText.innerHTML = "5 points";
 
-    let fakeDot2 = new DotVis(vec2(28, 28 + 35), -1, game);
-    // fakeDot.type = "whatwhatwhatitypedoesntmatter";
-    pointsDot.render();
-    let scoreText2 = createElmt("text", { class: "dotText", x: 46, y: 34 + 35});
+    fakeDot2 = fakeDot2 || new DotVis(vec2(28, 28 + 35), -1, game);
+    fakeDot2.render();
+    scoreText2 = scoreText2 || createElmt("text", { class: "dotText", x: 46, y: 34 + 35});
     scoreText2.innerHTML = "destroy these";
 }
+
+// resetGame() {
+    
+//     game = new Game();
+//     generatorInit();
+//     createDots(game, 5, DotVis);
+// }
 
 let playerLineAngle = NaN;
 let playerMoveDir = 1;
@@ -169,6 +191,9 @@ function playerRenderAnimation(prevAngle, prevDot, angle, dot) {
             renderPlayer(); 
             renderDots();
         }, duration * 1000 + 10);
+        setTimeout(() => {
+            playClack();
+        }, duration * 1000);
     } else {
         renderPlayer();
     }
@@ -189,6 +214,11 @@ export function playerJump(clockwise) {
     let prevDot = game.dot1;
 
     game.playerMove(clockwise);
+    
+    // let score = game.score;
+    // scoreText.innerHTML = `${score} points`;
+    if(game.gameEnded) endGame(true);
+    if(game.score != game.maxScore) endGame(false);
 
     let angle = calcPlayerLineAngle();
     let dot = game.dot1;
